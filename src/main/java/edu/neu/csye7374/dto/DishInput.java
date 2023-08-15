@@ -31,4 +31,6 @@ public class DishInput {
     private String extraMeat;
 
     private List<String> toppings;
+
+    private List<UUID> dishes;
 }

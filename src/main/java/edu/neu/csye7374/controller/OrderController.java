@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @RequestMapping
-    public ResponseEntity<HashMap<Status, List<Order>>> getAllOrders(@RequestBody Order order){
+    public ResponseEntity<HashMap<Status, List<Order>>> getAllOrders(){
         ResponseEntity<HashMap<Status, List<Order>>> response = new ResponseEntity<>();
         HashMap<Status, List<Order>> orders = orderService.getPendingOrders();
         if(orders == null){

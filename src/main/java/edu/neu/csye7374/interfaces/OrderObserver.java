@@ -4,5 +4,5 @@ import edu.neu.csye7374.entity.Order;
 
 public interface OrderObserver {
 
-    public void update(Order order);
+    void update(Order order);
 }

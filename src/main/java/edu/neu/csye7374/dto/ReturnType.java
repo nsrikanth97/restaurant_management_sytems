@@ -5,14 +5,15 @@ public enum ReturnType {
     FAILURE;
 
     public enum DishType {
-        APPETIZER, MAIN_COURSE, DESSERT, BEVERAGE;
+        APPETIZER, ENTREE, DESSERT, DRINK,COMBO;
 
         public String toString() {
             return switch (this) {
                 case APPETIZER -> "Appetizer";
-                case MAIN_COURSE -> "Main Course";
+                case ENTREE -> "Main Course";
                 case DESSERT -> "Dessert";
-                case BEVERAGE -> "Beverage";
+                case DRINK -> "Beverage";
+                case COMBO -> "Combo dish";
                 default -> throw new IllegalArgumentException();
             };
         }

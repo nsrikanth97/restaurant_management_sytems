@@ -11,7 +11,6 @@ public class ResponseEntity<E> {
 
     private ReturnType responseStatus;
 
-    StackTraceElement[] stackTraceElements;
 
     public ResponseEntity() {
     }
