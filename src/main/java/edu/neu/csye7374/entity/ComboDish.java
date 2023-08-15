@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @lombok.Data
@@ -17,7 +18,7 @@ public class ComboDish implements BaseDishDecorator {
     @Id
     @Column(unique = true, name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @ManyToMany
     @JoinTable(
