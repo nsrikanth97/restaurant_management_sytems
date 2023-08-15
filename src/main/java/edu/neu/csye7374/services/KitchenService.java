@@ -2,7 +2,6 @@ package edu.neu.csye7374.services;
 
 import edu.neu.csye7374.dto.Status;
 import edu.neu.csye7374.entity.Order;
-import edu.neu.csye7374.interfaces.KitchenObserver;
 import edu.neu.csye7374.interfaces.OrderObserver;
 import edu.neu.csye7374.logger.Logger;
 import edu.neu.csye7374.repository.OrderRepository;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Service
 public class KitchenService {
 
     @Autowired
@@ -47,6 +45,7 @@ public class KitchenService {
     public synchronized void loadPendingOrders(){
         if(pendingOrders == null){
             pendingOrders = orderRepository.findByStatus(Status.PREPARING);
+
         }
     }
 
@@ -55,10 +54,11 @@ public class KitchenService {
         return pendingOrders;
     }
 
-    public void updateStatus(Order order){
+    public List<Order> updateStatus(Order order){
         this.pendingOrders.removeIf(o-> Objects.equals(o.getId(), order.getId()));
         order.setStatus(Status.READY);
         notifyOrderService(order);
+        return pendingOrders;
     }
 
 

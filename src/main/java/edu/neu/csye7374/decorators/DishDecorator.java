@@ -1,6 +1,9 @@
 package edu.neu.csye7374.decorators;
 
 import edu.neu.csye7374.dto.ReturnType;
+import edu.neu.csye7374.strategies.PricingStrategy;
+
+import java.util.UUID;
 
 public class DishDecorator implements BaseDishDecorator{
 
@@ -8,6 +11,11 @@ public class DishDecorator implements BaseDishDecorator{
 
     public DishDecorator(BaseDishDecorator baseDishDecorator) {
         this.baseDishDecorator = baseDishDecorator;
+    }
+
+    @Override
+    public UUID getId() {
+        return baseDishDecorator.getId();
     }
 
     @Override
@@ -47,5 +55,10 @@ public class DishDecorator implements BaseDishDecorator{
     @Override
     public ReturnType.DishType getDishType() {
         return baseDishDecorator.getDishType();
+    }
+
+    @Override
+    public void setPricingStrategy(PricingStrategy pricingStrategy) {
+        baseDishDecorator.setPricingStrategy(pricingStrategy);
     }
 }

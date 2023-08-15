@@ -1,12 +1,15 @@
 package edu.neu.csye7374.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.neu.csye7374.dto.DishInput;
 import edu.neu.csye7374.dto.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -14,9 +17,9 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "order_id_generator")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true, name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(name = "date_time")
     private Date dateTime;
@@ -38,4 +41,11 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderDish> orderDishes;
+
+    @Transient
+    private List<DishInput> dishes;
+
+    public Order() {
+    }
+
 }

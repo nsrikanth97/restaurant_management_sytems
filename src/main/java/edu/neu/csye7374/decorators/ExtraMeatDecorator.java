@@ -2,7 +2,7 @@ package edu.neu.csye7374.decorators;
 
 public class ExtraMeatDecorator extends DishDecorator{
 
-    private String description;
+    private final String description;
     public ExtraMeatDecorator(BaseDishDecorator baseDishDecorator, String description) {
         super(baseDishDecorator);
         this.description = description;
