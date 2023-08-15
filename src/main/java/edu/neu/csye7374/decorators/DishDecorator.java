@@ -1,0 +1,51 @@
+package edu.neu.csye7374.decorators;
+
+import edu.neu.csye7374.dto.ReturnType;
+
+public class DishDecorator implements BaseDishDecorator{
+
+    private final BaseDishDecorator baseDishDecorator;
+
+    public DishDecorator(BaseDishDecorator baseDishDecorator) {
+        this.baseDishDecorator = baseDishDecorator;
+    }
+
+    @Override
+    public String getName() {
+        return baseDishDecorator.getName();
+    }
+    @Override
+    public String getDescription() {
+        return baseDishDecorator.getDescription();
+    }
+
+    @Override
+    public double getPrice() {
+        return baseDishDecorator.getPrice();
+    }
+
+    @Override
+    public boolean isVegan() {
+        return baseDishDecorator.isVegan();
+    }
+
+    @Override
+    public boolean isGlutenFree() {
+        return baseDishDecorator.isGlutenFree();
+    }
+
+    @Override
+    public int getPreparationTime() {
+        return baseDishDecorator.getPreparationTime();
+    }
+
+    @Override
+    public int getCalories() {
+        return baseDishDecorator.getCalories();
+    }
+
+    @Override
+    public ReturnType.DishType getDishType() {
+        return baseDishDecorator.getDishType();
+    }
+}
