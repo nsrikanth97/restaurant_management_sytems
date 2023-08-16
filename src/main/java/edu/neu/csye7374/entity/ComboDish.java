@@ -36,9 +36,11 @@ public class ComboDish implements BaseDishDecorator {
 
 
     @Column(name = "name", nullable = false)
-    private final String name;
+    private  String name;
 
-    public ComboDish(String name) {
+
+
+    private ComboDish(String name) {
         this.dishes = new ArrayList<>();
         this.name = name;
     }
@@ -81,21 +83,21 @@ public class ComboDish implements BaseDishDecorator {
     @Override
     public boolean isVegan() {
         for (BaseDishDecorator dish : dishes) {
-            if (dish.isVegan()) {
-                return true;
+            if (!dish.isVegan()) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean isGlutenFree() {
         for (BaseDishDecorator dish : dishes) {
-            if (dish.isGlutenFree()) {
-                return true;
+            if (!dish.isGlutenFree()) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -120,4 +122,37 @@ public class ComboDish implements BaseDishDecorator {
     public ReturnType.DishType getDishType() {
         return ReturnType.DishType.COMBO;
     }
+
+    private ComboDish() {
+    }
+
+    public static class ComboDishBuilder{
+        private final String name;
+
+        private final List<Dish> dishes;
+
+        private PricingStrategy pricingStrategy;
+
+        public ComboDishBuilder(String name) {
+            this.name = name;
+            this.dishes = new ArrayList<>();
+        }
+
+        public void addDish(Dish dish){
+            this.dishes.add(dish);
+        }
+
+        public ComboDishBuilder setPricingStrategy(PricingStrategy pricingStrategy){
+            this.pricingStrategy = pricingStrategy;
+            return this;
+        }
+
+        public ComboDish build(){
+            ComboDish comboDish = new ComboDish(this.name);
+            comboDish.setDishes(this.dishes);
+            comboDish.setPricingStrategy(this.pricingStrategy);
+            return comboDish;
+        }
+    }
 }
+
