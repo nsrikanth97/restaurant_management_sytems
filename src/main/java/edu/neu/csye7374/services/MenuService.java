@@ -47,9 +47,12 @@ public class MenuService {
         return null;
     }
 
-    public ResponseEntity<Dish> addDish(DishInput d, boolean isCustomized) {
+    public ResponseEntity<BaseDishDecorator> addDish(DishInput d, boolean isCustomized) {
+        if(d == null || d.getName() == null || d.getName().isEmpty()){
+            return new ResponseEntity<>("Invalid dish", null, ReturnType.FAILURE);
+        }
         if(d.getDishType() == ReturnType.DishType.COMBO){
-            ComboDish comboDish = new ComboDish(d.getName());
+            ComboDish.ComboDishBuilder comboDish = new ComboDish.ComboDishBuilder(d.getName());
             for(UUID dishId: d.getDishes()){
                 BaseDishDecorator dish = getDish(dishId);
                 if(dish == null || dish.getDishType() == ReturnType.DishType.COMBO){
@@ -57,7 +60,7 @@ public class MenuService {
                 }
                 comboDish.addDish((Dish) dish);
             }
-            return addDish(comboDish, isCustomized);
+          return addDish(comboDish.build(), isCustomized);
         }
         Dish dish =
                 new Dish.DishBuilder(d.getName(),d.getPrice())
@@ -70,11 +73,10 @@ public class MenuService {
         return addDish(dish,false);
     }
 
-    public ResponseEntity<Dish> addDish(Dish dish, boolean isCustomized){
-
+    public ResponseEntity<BaseDishDecorator> addDish(Dish dish, boolean isCustomized){
         ResponseEntity<Dish> response =dishRepository.saveAndCatch(dish);
         if(response.getResponseStatus() == ReturnType.FAILURE){
-            return response;
+            return new ResponseEntity<>(response.getMessage(),dish, ReturnType.FAILURE);
         }else{
             dish = response.getData();
         }
@@ -84,8 +86,24 @@ public class MenuService {
         if(!isCustomized){
             dishes.add(dish);
         }
-        response = new ResponseEntity<>("Dish added successfully",dish, ReturnType.SUCCESS);
-        return response;
+        return new ResponseEntity<>("Dish added successfully",dish, ReturnType.SUCCESS);
+    }
+
+    public ResponseEntity<BaseDishDecorator> addDish(ComboDish dish, boolean isCustomized){
+        ResponseEntity<ComboDish> response =comboDishRepository.saveAndCatch(dish);
+        if(response.getResponseStatus() == ReturnType.FAILURE){
+            return new ResponseEntity<>(response.getMessage(),dish, ReturnType.FAILURE);
+        }else{
+            dish = response.getData();
+        }
+        if(dishes == null){
+            dishes = new ArrayList<>();
+        }
+        if(!isCustomized){
+            dishes.add(dish);
+        }
+        return new ResponseEntity<>("Dish added successfully",dish, ReturnType.SUCCESS);
+
     }
 
     private synchronized void loadDishes(){

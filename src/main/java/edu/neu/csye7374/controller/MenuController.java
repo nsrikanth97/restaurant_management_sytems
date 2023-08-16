@@ -38,7 +38,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/addDish", method = RequestMethod.POST)
-    public ResponseEntity<Dish> addDish(@RequestBody DishInput dishInput){
+    public ResponseEntity<BaseDishDecorator> addDish(@RequestBody DishInput dishInput){
         return menuService.addDish(dishInput,false);
     }
 
