@@ -1,11 +1,9 @@
 package edu.neu.csye7374.decorators;
 
-import edu.neu.csye7374.dto.ReturnType;
-
 public class CheeseDecorator extends DishDecorator{
 
     private int quantity;
-    public CheeseDecorator(BaseDishDecorator baseDishDecorator, int quantity) {
+    public CheeseDecorator(BaseDishAPI baseDishDecorator, int quantity) {
         super(baseDishDecorator);
         this.quantity = quantity;
     }
@@ -47,5 +45,7 @@ public class CheeseDecorator extends DishDecorator{
         else
              return super.getCalories();
     }
+
+
 
 }

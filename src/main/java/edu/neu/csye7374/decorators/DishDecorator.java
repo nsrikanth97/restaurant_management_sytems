@@ -5,11 +5,11 @@ import edu.neu.csye7374.strategies.PricingStrategy;
 
 import java.util.UUID;
 
-public class DishDecorator implements BaseDishDecorator{
+public class DishDecorator implements BaseDishAPI {
 
-    private final BaseDishDecorator baseDishDecorator;
+    private final BaseDishAPI baseDishDecorator;
 
-    public DishDecorator(BaseDishDecorator baseDishDecorator) {
+    public DishDecorator(BaseDishAPI baseDishDecorator) {
         this.baseDishDecorator = baseDishDecorator;
     }
 
@@ -61,4 +61,6 @@ public class DishDecorator implements BaseDishDecorator{
     public void setPricingStrategy(PricingStrategy pricingStrategy) {
         baseDishDecorator.setPricingStrategy(pricingStrategy);
     }
+
+
 }

@@ -21,11 +21,13 @@ public class UserController {
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     private ResponseEntity<User> createUser(@RequestBody AuthenticationDto authenticationDto){
-        return userService.createUser(authenticationDto);
+        ResponseEntity<User> response = userService.createUser(authenticationDto);
+        response.getData().setPassword(null);
+        return response;
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    private ResponseEntity<Boolean> authenticate(@RequestBody AuthenticationDto authenticationDto){
+    private ResponseEntity<AuthenticationDto> authenticate(@RequestBody AuthenticationDto authenticationDto){
         return userService.authenticate(authenticationDto);
     }
 

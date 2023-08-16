@@ -1,6 +1,6 @@
 package edu.neu.csye7374.services;
 
-import edu.neu.csye7374.decorators.BaseDishDecorator;
+import edu.neu.csye7374.decorators.BaseDishAPI;
 import edu.neu.csye7374.decorators.CheeseDecorator;
 import edu.neu.csye7374.decorators.ExtraMeatDecorator;
 import edu.neu.csye7374.decorators.ToppingDecorator;
@@ -41,8 +41,9 @@ public class OrderService implements OrderObserver {
             logger.info("\n OrderService: New order received with id :" + order.getId());
             double total = 0;
             for (DishInput d : order.getDishes()) {
-                BaseDishDecorator cd = menuService.getDish(d.getId());
-                ((Dish) cd).setPrice(d.getPrice());
+                BaseDishAPI cd = menuService.getDish(d.getId());
+                if(cd instanceof Dish)
+                    ((Dish)cd).setPrice(d.getPrice());
                 if (d.isCustomized()) {
                     if (d.getCheesePreference() > 0)
                         cd = new CheeseDecorator(cd, d.getCheesePreference());

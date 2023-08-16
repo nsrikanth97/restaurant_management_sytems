@@ -6,7 +6,7 @@ public class ToppingDecorator extends DishDecorator{
 
     private List<String> toppings;
 
-    public ToppingDecorator(BaseDishDecorator baseDishDecorator, List<String> toppings) {
+    public ToppingDecorator(BaseDishAPI baseDishDecorator, List<String> toppings) {
         super(baseDishDecorator);
         this.toppings = toppings;
     }

@@ -1,11 +1,12 @@
 package edu.neu.csye7374.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.neu.csye7374.decorators.BaseDishDecorator;
+import edu.neu.csye7374.decorators.BaseDishAPI;
 import edu.neu.csye7374.dto.ReturnType;
 import edu.neu.csye7374.strategies.PricingStrategy;
 import jakarta.persistence.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @lombok.Data
 @Entity(name = "combo_dish")
-public class ComboDish implements BaseDishDecorator {
+public class ComboDish implements BaseDishAPI {
 
     @Id
     @Column(unique = true, name = "id", nullable = false)
@@ -33,7 +34,9 @@ public class ComboDish implements BaseDishDecorator {
     @JsonIgnore
     private PricingStrategy pricingStrategy;
 
-
+    @Transient
+    @JsonIgnore
+    private DecimalFormat df = new DecimalFormat("#.##");
 
     @Column(name = "name", nullable = false)
     private  String name;
@@ -60,7 +63,7 @@ public class ComboDish implements BaseDishDecorator {
     @Override
     public String getDescription() {
         StringBuilder sb = new StringBuilder("Combo meal with the following dishes: ");
-        for (BaseDishDecorator dish : dishes) {
+        for (BaseDishAPI dish : dishes) {
             sb.append(dish.getName());
             sb.append(" ");
         }
@@ -70,19 +73,19 @@ public class ComboDish implements BaseDishDecorator {
     @Override
     public double getPrice() {
         double price = 0;
-        for (BaseDishDecorator dish : dishes) {
+        for (BaseDishAPI dish : dishes) {
             price += dish.getPrice();
         }
         price = price * 0.8;
         if(pricingStrategy != null) {
             price = pricingStrategy.calculatePrice(price);
         }
-        return price;
+        return Double.parseDouble(df.format(price));
     }
 
     @Override
     public boolean isVegan() {
-        for (BaseDishDecorator dish : dishes) {
+        for (BaseDishAPI dish : dishes) {
             if (!dish.isVegan()) {
                 return false;
             }
@@ -92,7 +95,7 @@ public class ComboDish implements BaseDishDecorator {
 
     @Override
     public boolean isGlutenFree() {
-        for (BaseDishDecorator dish : dishes) {
+        for (BaseDishAPI dish : dishes) {
             if (!dish.isGlutenFree()) {
                 return false;
             }
@@ -103,7 +106,7 @@ public class ComboDish implements BaseDishDecorator {
     @Override
     public int getPreparationTime() {
         int time = 0;
-        for (BaseDishDecorator dish : dishes) {
+        for (BaseDishAPI dish : dishes) {
             time = Math.max(dish.getPreparationTime(), time);
         }
         return time;
@@ -112,7 +115,7 @@ public class ComboDish implements BaseDishDecorator {
     @Override
     public int getCalories() {
         int calories = 0;
-        for (BaseDishDecorator dish : dishes) {
+        for (BaseDishAPI dish : dishes) {
             calories += dish.getCalories();
         }
         return calories;

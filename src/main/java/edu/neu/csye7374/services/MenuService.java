@@ -1,6 +1,6 @@
 package edu.neu.csye7374.services;
 
-import edu.neu.csye7374.decorators.BaseDishDecorator;
+import edu.neu.csye7374.decorators.BaseDishAPI;
 import edu.neu.csye7374.dto.DishInput;
 import edu.neu.csye7374.dto.ResponseEntity;
 import edu.neu.csye7374.dto.ReturnType;
@@ -25,7 +25,7 @@ public class MenuService {
     private ComboDishRepository comboDishRepository;
 
     private static MenuService instance = null;
-    private List<BaseDishDecorator> dishes;
+    private List<BaseDishAPI> dishes;
     private MenuService() {
     }
     public static MenuService getInstance() {
@@ -37,9 +37,9 @@ public class MenuService {
         return instance;
     }
 
-    public BaseDishDecorator getDish(UUID id){
+    public BaseDishAPI getDish(UUID id){
         loadDishes();
-        for(BaseDishDecorator dish: dishes){
+        for(BaseDishAPI dish: dishes){
             if(Objects.equals(dish.getId(), id)){
                 return dish;
             }
@@ -47,20 +47,20 @@ public class MenuService {
         return null;
     }
 
-    public ResponseEntity<BaseDishDecorator> addDish(DishInput d, boolean isCustomized) {
+    public ResponseEntity<BaseDishAPI> addDish(DishInput d, boolean isCustomized) {
         if(d == null || d.getName() == null || d.getName().isEmpty()){
             return new ResponseEntity<>("Invalid dish", null, ReturnType.FAILURE);
         }
         if(d.getDishType() == ReturnType.DishType.COMBO){
-            ComboDish.ComboDishBuilder comboDish = new ComboDish.ComboDishBuilder(d.getName());
+            ComboDish.ComboDishBuilder comboDishBuilder = new ComboDish.ComboDishBuilder(d.getName());
             for(UUID dishId: d.getDishes()){
-                BaseDishDecorator dish = getDish(dishId);
+                BaseDishAPI dish = getDish(dishId);
                 if(dish == null || dish.getDishType() == ReturnType.DishType.COMBO){
                     return new ResponseEntity<>("Invalid dish id", null, ReturnType.FAILURE);
                 }
-                comboDish.addDish((Dish) dish);
+                comboDishBuilder.addDish((Dish) dish);
             }
-          return addDish(comboDish.build(), isCustomized);
+          return addDish(comboDishBuilder.build(), isCustomized);
         }
         Dish dish =
                 new Dish.DishBuilder(d.getName(),d.getPrice())
@@ -73,7 +73,7 @@ public class MenuService {
         return addDish(dish,false);
     }
 
-    public ResponseEntity<BaseDishDecorator> addDish(Dish dish, boolean isCustomized){
+    public ResponseEntity<BaseDishAPI> addDish(Dish dish, boolean isCustomized){
         ResponseEntity<Dish> response =dishRepository.saveAndCatch(dish);
         if(response.getResponseStatus() == ReturnType.FAILURE){
             return new ResponseEntity<>(response.getMessage(),dish, ReturnType.FAILURE);
@@ -89,7 +89,7 @@ public class MenuService {
         return new ResponseEntity<>("Dish added successfully",dish, ReturnType.SUCCESS);
     }
 
-    public ResponseEntity<BaseDishDecorator> addDish(ComboDish dish, boolean isCustomized){
+    public ResponseEntity<BaseDishAPI> addDish(ComboDish dish, boolean isCustomized){
         ResponseEntity<ComboDish> response =comboDishRepository.saveAndCatch(dish);
         if(response.getResponseStatus() == ReturnType.FAILURE){
             return new ResponseEntity<>(response.getMessage(),dish, ReturnType.FAILURE);
@@ -121,19 +121,19 @@ public class MenuService {
 
 
 
-    public List<BaseDishDecorator> getDishes() {
+    public List<BaseDishAPI> getDishes() {
         loadDishes();
         return dishes;
     }
 
     public void updatePricingStrategy(PricingStrategy pricingStrategy) {
         loadDishes();
-        for(BaseDishDecorator dish: dishes){
+        for(BaseDishAPI dish: dishes){
             dish.setPricingStrategy(pricingStrategy);
         }
     }
 
-    public ResponseEntity<BaseDishDecorator> updateDish(BaseDishDecorator dish) {
+    public ResponseEntity<BaseDishAPI> updateDish(BaseDishAPI dish) {
         UUID id = dish.getId();
         dishes.removeIf(d -> Objects.equals(d.getId(), id));
         ResponseEntity<ComboDish> comboDishResponse;

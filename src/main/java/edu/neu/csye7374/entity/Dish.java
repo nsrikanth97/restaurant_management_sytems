@@ -2,21 +2,26 @@ package edu.neu.csye7374.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.neu.csye7374.decorators.BaseDishDecorator;
+import edu.neu.csye7374.decorators.BaseDishAPI;
 import edu.neu.csye7374.dto.ReturnType;
 import edu.neu.csye7374.strategies.PricingStrategy;
 import jakarta.persistence.*;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 @lombok.Data
 @Entity
 @Table(name = "dish")
-public class Dish implements BaseDishDecorator {
+public class Dish implements BaseDishAPI {
 
     @Transient
     @JsonIgnore
     private PricingStrategy pricingStrategy;
+
+    @Transient
+    @JsonIgnore
+    private DecimalFormat df = new DecimalFormat("#.##");
 
 
     @Id
@@ -51,9 +56,9 @@ public class Dish implements BaseDishDecorator {
 
     public double getPrice() {
         if(pricingStrategy == null){
-            return price;
+            return Double.parseDouble(df.format(price));
         }
-        return pricingStrategy.calculatePrice(price);
+        return Double.parseDouble(df.format(pricingStrategy.calculatePrice(price)));
     }
 
 
@@ -114,6 +119,7 @@ public class Dish implements BaseDishDecorator {
             this.pricingStrategy = pricingStrategy;
             return this;
         }
+
         public Dish build() {
             Dish dish = new Dish();
             dish.name = this.name;

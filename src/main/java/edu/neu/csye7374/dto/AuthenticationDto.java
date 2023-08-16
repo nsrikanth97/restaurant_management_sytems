@@ -19,7 +19,9 @@ public class AuthenticationDto {
 
     private String phone;
 
-    private String role;
+    private Role role;
+
+    private String token;
 
 
 }

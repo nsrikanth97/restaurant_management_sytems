@@ -6,6 +6,7 @@ import edu.neu.csye7374.entity.User;
 import edu.neu.csye7374.logger.Logger;
 import edu.neu.csye7374.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -16,13 +17,17 @@ public class EmailAndPasswordAuthentication extends AuthenticationTemplate{
     private UserRepository userRepository;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private Logger log;
 
     @Override
     protected boolean verifyCredentials(AuthenticationDto authenticationDto) {
         // Validate credentials against the user database
         User user = userRepository.findByEmail(authenticationDto.getEmail());
-        return user != null && user.getPassword().equals(authenticationDto.getPassword());
+
+        return user != null && passwordEncoder.matches(authenticationDto.getPassword(), user.getPassword());
     }
 
     @Override

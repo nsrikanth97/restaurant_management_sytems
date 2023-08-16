@@ -1,14 +1,20 @@
 package edu.neu.csye7374.entity;
 
 
+import edu.neu.csye7374.dto.Role;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "user_details")
 @Data
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,7 +28,8 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "phone")
     private String phone;
@@ -33,4 +40,28 @@ public class User {
     @Column(name = "finger_print")
     private String fingerPrint;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

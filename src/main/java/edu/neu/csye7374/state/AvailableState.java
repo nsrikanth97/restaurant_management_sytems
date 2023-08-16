@@ -29,7 +29,7 @@ public class AvailableState implements TableState {
 
     @Override
     public ResponseEntity<Tables> occupyTable(Tables table) {
-        table.setState(new ReservedState());
+        table.setState(new OccupiedState());
         table.setCurrentState("Occupied");
         repository.save(table);
         return new ResponseEntity<>( "Table Occupied", table, ReturnType.SUCCESS);

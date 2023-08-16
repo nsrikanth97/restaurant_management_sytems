@@ -1,7 +1,6 @@
 package edu.neu.csye7374.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.neu.csye7374.decorators.BaseDishDecorator;
 import edu.neu.csye7374.dto.ReturnType;
 import jakarta.persistence.*;
 import lombok.Data;
